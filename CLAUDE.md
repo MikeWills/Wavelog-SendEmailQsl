@@ -9,6 +9,11 @@ instance for new QSOs and emails each contact an HTML QSL card confirmation
 (inline image + attachment). Intended to run on a schedule (cron) on Linux
 with PowerShell 7+.
 
+## Workflow
+
+All changes must go through a pull request — do not commit directly to
+`main`. Create a feature branch, push it, and open a PR for review.
+
 ## Running / testing
 
 ```bash
