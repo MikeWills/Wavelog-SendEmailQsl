@@ -1,0 +1,10 @@
+# Local configuration (copy from *.example.json and fill in secrets)
+config.json
+card_assignments.json
+
+# Runtime state and logs
+state.json
+logs/
+
+# QSL card images (personal artwork)
+cards/

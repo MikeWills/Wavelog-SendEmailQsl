@@ -1,0 +1,21 @@
+{
+  "wavelog": {
+    "url": "https://your-wavelog-instance.example.com",
+    "api_key": "YOUR_READ_ONLY_API_KEY",
+    "station_id": 1
+  },
+  "station": {
+    "callsign": "WX0MIK",
+    "name": "Mike Wills",
+    "location": "Mankato, MN"
+  },
+  "smtp": {
+    "host": "smtp.example.com",
+    "port": 587,
+    "use_ssl": true,
+    "username": "you@example.com",
+    "password": "YOUR_SMTP_PASSWORD",
+    "from_address": "you@example.com",
+    "from_name": "WX0MIK - Mike Wills"
+  }
+}

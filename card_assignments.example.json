@@ -1,0 +1,8 @@
+{
+  "_comment": "Map callsigns (uppercase) to a specific card filename in the cards/ folder.",
+  "_comment2": "Callsigns NOT listed here get a random card from the default pool.",
+  "_comment3": "Cards listed here are excluded from the default random pool.",
+
+  "W1AW":   "special_arrl_card.jpg",
+  "K5ABC":  "dx_card.png"
+}
