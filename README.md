@@ -42,6 +42,8 @@ qsl-mailer/
    - `wavelog.api_key` — a **read-only** key from Wavelog → User Menu → API Keys
    - `wavelog.station_id` — found in the URL when editing a Station Profile
    - Fill in `station` and `smtp` sections
+   - `smtp.reply_to` (optional) — if replies should go to a different address
+     than `smtp.from_address`, set it here
 
 4. **Edit `card_assignments.json`** (optional):  
    Map specific callsigns to specific card filenames.  

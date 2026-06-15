@@ -236,8 +236,6 @@ function Send-QslEmail {
 
     $cid     = "qslcard_$([System.Guid]::NewGuid().ToString('N'))"
     $mimeType = Get-MimeType $CardFile.Extension
-    $cardBytes = [System.IO.File]::ReadAllBytes($CardFile.FullName)
-    $cardB64   = [Convert]::ToBase64String($cardBytes)
 
     $subject = "$($cfg.station.callsign) QSL Card — $Callsign $date $band $mode"
 
@@ -279,56 +277,6 @@ function Send-QslEmail {
         return
     }
 
-    # Build MIME message manually (no external deps required)
-    $boundary     = "----=_Part_$([System.Guid]::NewGuid().ToString('N'))"
-    $altBoundary  = "----=_Alt_$([System.Guid]::NewGuid().ToString('N'))"
-    $relBoundary  = "----=_Rel_$([System.Guid]::NewGuid().ToString('N'))"
-
-    # We build: multipart/mixed
-    #   └─ multipart/related
-    #        ├─ text/html  (with inline CID reference)
-    #        └─ image (inline, cid)
-    #   └─ image (attachment)
-
-    $nl = "`r`n"
-
-    $mime = ""
-    $mime += "From: $($cfg.smtp.from_name) <$($cfg.smtp.from_address)>$nl"
-    $mime += "To: $ToName <$ToAddress>$nl"
-    $mime += "Subject: $subject$nl"
-    $mime += "MIME-Version: 1.0$nl"
-    $mime += "Content-Type: multipart/mixed; boundary=`"$boundary`"$nl"
-    $mime += $nl
-
-    # -- Related part (html + inline image)
-    $mime += "--$boundary$nl"
-    $mime += "Content-Type: multipart/related; boundary=`"$relBoundary`"$nl"
-    $mime += $nl
-
-    $mime += "--$relBoundary$nl"
-    $mime += "Content-Type: text/html; charset=utf-8$nl"
-    $mime += "Content-Transfer-Encoding: quoted-printable$nl"
-    $mime += $nl
-    $mime += $htmlBody + $nl
-
-    $mime += "--$relBoundary$nl"
-    $mime += "Content-Type: $mimeType; name=`"$($CardFile.Name)`"$nl"
-    $mime += "Content-Transfer-Encoding: base64$nl"
-    $mime += "Content-ID: <$cid>$nl"
-    $mime += "Content-Disposition: inline; filename=`"$($CardFile.Name)`"$nl"
-    $mime += $nl
-    $mime += $cardB64 + $nl
-    $mime += "--$relBoundary--$nl"
-
-    # -- Attachment part
-    $mime += "--$boundary$nl"
-    $mime += "Content-Type: $mimeType; name=`"$($CardFile.Name)`"$nl"
-    $mime += "Content-Transfer-Encoding: base64$nl"
-    $mime += "Content-Disposition: attachment; filename=`"$($CardFile.Name)`"$nl"
-    $mime += $nl
-    $mime += $cardB64 + $nl
-    $mime += "--$boundary--$nl"
-
     # Send via SMTP
     $smtpClient = [System.Net.Mail.SmtpClient]::new($cfg.smtp.host, $cfg.smtp.port)
     $smtpClient.EnableSsl = $cfg.smtp.use_ssl
@@ -358,6 +306,9 @@ function Send-QslEmail {
     $mailMsg = [System.Net.Mail.MailMessage]::new()
     $mailMsg.From    = [System.Net.Mail.MailAddress]::new($cfg.smtp.from_address, $cfg.smtp.from_name)
     $mailMsg.To.Add([System.Net.Mail.MailAddress]::new($ToAddress, $ToName))
+    if ($cfg.smtp.PSObject.Properties['reply_to'] -and $cfg.smtp.reply_to) {
+        $mailMsg.ReplyToList.Add([System.Net.Mail.MailAddress]::new($cfg.smtp.reply_to))
+    }
     $mailMsg.Subject = $subject
     $mailMsg.AlternateViews.Add($htmlView)
 
