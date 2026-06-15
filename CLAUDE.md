@@ -16,6 +16,8 @@ pwsh ./Send-QslCards.ps1 -DryRun   # logs what would be sent, no SMTP send
 pwsh ./Send-QslCards.ps1           # live run
 ```
 
+Always update the readme with relavant changes. Always do a security check. Always review project for unused code an remove.
+
 - `-ConfigPath` can override the default `config.json` location (defaults to
   the script's own directory).
 - There is no test suite, build step, or linter — verification is via
