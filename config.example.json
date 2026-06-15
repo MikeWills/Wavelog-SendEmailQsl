@@ -16,6 +16,7 @@
     "username": "you@example.com",
     "password": "YOUR_SMTP_PASSWORD",
     "from_address": "you@example.com",
-    "from_name": "WX0MIK - Mike Wills"
+    "from_name": "WX0MIK - Mike Wills",
+    "reply_to": "you-replies@example.com"
   }
 }
