@@ -5,9 +5,9 @@
     "station_id": 1
   },
   "station": {
-    "callsign": "WX0MIK",
-    "name": "Mike Wills",
-    "location": "Mankato, MN"
+    "callsign": "YOUR_CALLSIGN",
+    "name": "Your Name",
+    "location": "Your City, State"
   },
   "smtp": {
     "host": "smtp.example.com",
@@ -16,7 +16,7 @@
     "username": "you@example.com",
     "password": "YOUR_SMTP_PASSWORD",
     "from_address": "you@example.com",
-    "from_name": "WX0MIK - Mike Wills",
+    "from_name": "YOUR_CALLSIGN - Your Name",
     "reply_to": "you-replies@example.com"
   }
 }
