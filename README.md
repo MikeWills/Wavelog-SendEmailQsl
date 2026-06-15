@@ -37,7 +37,8 @@ qsl-mailer/
 2. **Add QSL card images** into the `cards/` folder (JPEG or PNG).
 
 3. **Edit `config.json`**:
-   - `wavelog.url` — your Wavelog base URL (no trailing slash needed)
+   - `wavelog.url` — your Wavelog base URL, including `/index.php` (e.g.
+     `https://logbook.example.com/index.php`); no trailing slash needed
    - `wavelog.api_key` — a **read-only** key from Wavelog → User Menu → API Keys
    - `wavelog.station_id` — found in the URL when editing a Station Profile
    - Fill in `station` and `smtp` sections

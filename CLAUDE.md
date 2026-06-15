@@ -56,3 +56,9 @@ pwsh ./Send-QslCards.ps1           # live run
 - `state.json` — runtime-generated, tracks `last_qso_id`.
 - `cards/` — QSL card images (jpg/jpeg/png).
 - `logs/qsl-mailer-YYYY-MM.log` — monthly log files written by `Write-Log`.
+
+**Do not read or edit `config.json` or `card_assignments.json`** — they hold
+the user's live credentials and personal card mappings. For any config-shape
+changes (new keys, format changes, etc.), update `config.example.json` /
+`card_assignments.example.json` instead and tell the user to apply the change
+to their real files manually.

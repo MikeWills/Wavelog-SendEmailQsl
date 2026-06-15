@@ -61,7 +61,7 @@ Write-Log "Fetching QSOs with ID > $($state.last_qso_id)"
 
 # ─── Pull new QSOs from Wavelog ─────────────────────────────────────────────
 
-$apiUrl  = "$($cfg.wavelog.url.TrimEnd('/'))/index.php/api/get_contacts_adif"
+$apiUrl  = "$($cfg.wavelog.url.TrimEnd('/'))/api/get_contacts_adif"
 $payload = @{
     key        = $cfg.wavelog.api_key
     station_id = $cfg.wavelog.station_id

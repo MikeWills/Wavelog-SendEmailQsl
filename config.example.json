@@ -1,6 +1,6 @@
 {
   "wavelog": {
-    "url": "https://your-wavelog-instance.example.com",
+    "url": "https://your-wavelog-instance.example.com/index.php",
     "api_key": "YOUR_READ_ONLY_API_KEY",
     "station_id": 1
   },
