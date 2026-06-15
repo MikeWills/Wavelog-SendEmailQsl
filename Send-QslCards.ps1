@@ -9,6 +9,14 @@
     inline and as an attachment. Card selection: per-callsign assignment first,
     then random from the default pool.
 
+    -DryRun preserves a pure preview: nothing is emailed and state.json is
+    not updated, so a real run afterwards processes the same QSOs.
+
+    -MarkCaughtUp fetches all pending QSOs, advances state.json to the
+    latest one, and exits without sending any email or selecting cards.
+    Use this on an existing logbook to start processing only new QSOs
+    from this point forward.
+
 .NOTES
     Requires: PowerShell 7+
     Config:   config.json (same directory as this script)
@@ -18,7 +26,8 @@
 [CmdletBinding()]
 param(
     [string]$ConfigPath = "$PSScriptRoot/config.json",
-    [switch]$DryRun   # Print what would be sent, but don't actually send email
+    [switch]$DryRun,       # Print what would be sent, but don't actually send email or update state
+    [switch]$MarkCaughtUp  # Advance state.json to the latest QSO without sending any emails
 )
 
 Set-StrictMode -Version Latest
@@ -120,6 +129,26 @@ if ($qsos.Count -eq 0) {
 
 # Track max QSO ID in this batch (Wavelog returns it as logid in ADIF)
 $maxId = $state.last_qso_id
+
+# ─── Catch-up mode: advance state without sending any email ─────────────────
+if ($MarkCaughtUp) {
+    foreach ($qso in $qsos) {
+        if ($qso.PSObject.Properties['APP_WAVELOG_LOGID']) {
+            $logId = [int]$qso.APP_WAVELOG_LOGID
+            if ($logId -gt $maxId) { $maxId = $logId }
+        }
+    }
+
+    if ($maxId -gt $state.last_qso_id) {
+        $state.last_qso_id = $maxId
+        $state | ConvertTo-Json | Set-Content $StateFile
+        Write-Log "Marked as caught up: last_qso_id = $maxId ($($qsos.Count) existing QSO(s) skipped, no emails sent)"
+    } else {
+        Write-Log "No higher QSO ID found among $($qsos.Count) QSO(s); state unchanged."
+    }
+
+    exit 0
+}
 
 # ─── QSL Card Selection ──────────────────────────────────────────────────────
 # Per-callsign assignments loaded from card_assignments.json
@@ -388,7 +417,9 @@ foreach ($qso in $qsos) {
 
 # ─── Persist State ───────────────────────────────────────────────────────────
 
-if ($maxId -gt $state.last_qso_id) {
+if ($DryRun) {
+    Write-Log "[DRY RUN] State not updated (would advance last_qso_id to $maxId)"
+} elseif ($maxId -gt $state.last_qso_id) {
     $state.last_qso_id = $maxId
     $state | ConvertTo-Json | Set-Content $StateFile
     Write-Log "State updated: last_qso_id = $maxId"

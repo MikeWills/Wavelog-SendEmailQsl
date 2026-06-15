@@ -47,7 +47,7 @@ qsl-mailer/
    Map specific callsigns to specific card filenames.  
    Callsigns not listed get a random card from the remaining pool.
 
-5. **Test run** (dry run — no emails sent):
+5. **Test run** (dry run — no emails sent, state.json not updated):
    ```bash
    pwsh ./Send-QslCards.ps1 -DryRun
    ```
@@ -56,6 +56,22 @@ qsl-mailer/
    ```bash
    pwsh ./Send-QslCards.ps1
    ```
+
+---
+
+## Starting on an Existing Logbook
+
+If you're enabling this on a logbook that already has a lot of QSOs, a normal
+first run will try to email every existing contact that has an `EMAIL` field.
+To start fresh from "now" instead, run:
+
+```bash
+pwsh ./Send-QslCards.ps1 -MarkCaughtUp
+```
+
+This fetches all pending QSOs, advances `state.json` to the most recent one,
+and exits — no emails are sent and no cards are selected. Future runs will
+only process QSOs logged after this point.
 
 ---
 
